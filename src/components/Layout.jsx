@@ -28,7 +28,12 @@ import {
   AccountCircle,InfoOutlined
 } from '@mui/icons-material';
 
+import ChatbotSidebar from './customer/ChatbotSidebar'; // Adjust path as per your structure
+import { Fab } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
+
 const drawerWidth = 260;
+
 
 const menuItems = [
   { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
@@ -45,6 +50,8 @@ const Layout = ({ onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const username = localStorage.getItem('username') || 'Admin';
+  const [chatOpen, setChatOpen] = useState(false);
+const customerId = localStorage.getItem('userId') || 1; // Fallback if needed
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -173,6 +180,28 @@ const Layout = ({ onLogout }) => {
           </Menu>
         </Toolbar>
       </AppBar>
+
+      {/* Fixed Chat Button */}
+    <Fab
+      color="primary"
+      onClick={() => setChatOpen(true)}
+      sx={{
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        zIndex: theme => theme.zIndex.modal + 1,
+      }}
+      aria-label="chatbot"
+    >
+      <ChatIcon />
+    </Fab>
+
+    {/* Chatbot Sidebar */}
+    <ChatbotSidebar
+      open={chatOpen}
+      onClose={() => setChatOpen(false)}
+      customerId={customerId}
+    />
 
       <Box
         component="nav"

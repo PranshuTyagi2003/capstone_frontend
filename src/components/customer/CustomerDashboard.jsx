@@ -3,11 +3,13 @@ import {
   Box, Grid, Card, CardContent, Typography, Chip, Button,
   CircularProgress, Alert, Divider
 } from '@mui/material';
+import { Fab } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
 import { Payment as PaymentIcon } from '@mui/icons-material';
 import axios from 'axios';
 import { getStatusColor } from '../../utils/constants';
 import PaymentModal from './PaymentModal';
-import Chatbot from './Chatbot';
+import ChatbotSidebar from './ChatbotSidebar';
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -17,6 +19,8 @@ const CustomerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const customerId = localStorage.getItem('userId') || 1; // Fallback if needed
 
   const loadProfile = () => {
     const userId = localStorage.getItem('userId');
@@ -129,10 +133,26 @@ const CustomerDashboard = () => {
       />
       {/* AI Chatbot */}
 <Card elevation={3} sx={{ mt: 3 }}>
-  <CardContent>
-    <Typography variant="h6" fontWeight="bold" mb={2}>Need Help?</Typography>
-    <Chatbot customerId={customer.id} />
-  </CardContent>
+  <Fab
+      color="primary"
+      onClick={() => setChatOpen(true)}
+      sx={{
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        zIndex: theme => theme.zIndex.modal + 1,
+      }}
+      aria-label="chatbot"
+    >
+      <ChatIcon />
+    </Fab>
+
+    {/* Chatbot Sidebar */}
+    <ChatbotSidebar
+      open={chatOpen}
+      onClose={() => setChatOpen(false)}
+      customerId={customerId}
+    />
 </Card>
     </Box>
   );
